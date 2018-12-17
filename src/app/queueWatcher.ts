@@ -23,7 +23,8 @@ export class QueueWatcher {
             if (message && message.messageText && message.messageId && message.popReceipt) {
                 console.log("New message in Queue", message);
                 const { messageText, messageId, popReceipt } = message;
-                const commandOutput = await this.commServ.ExecuteCommand(messageText);
+                var decodedMsg = new Buffer(messageText, 'base64')
+                const commandOutput = await this.commServ.ExecuteCommand(decodedMsg.toString());
                 console.log(commandOutput);
                 await this.azureServ.DeleteMessage(messageId, popReceipt);
                 console.log("Message Executed and Deleted");
